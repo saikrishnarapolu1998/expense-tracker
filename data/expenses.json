@@ -4,5 +4,17 @@
     "amount": 120.0,
     "category": "Travel",
     "description": "Uber Auto"
+  },
+  {
+    "date": "2026-03-03",
+    "amount": 125.0,
+    "category": "food",
+    "description": "food"
+  },
+  {
+    "date": "2026-03-03",
+    "amount": 500.0,
+    "category": "rent",
+    "description": "rent"
   }
 ]
