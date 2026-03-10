@@ -1,5 +1,34 @@
 from datetime import date
-from tabulate import tabulate
+try:
+    from tabulate import tabulate
+except ModuleNotFoundError:
+    tabulate = None
+
+
+def print_table(rows: list[list], headers: list[str]) -> None:
+    """Print a table with tabulate when available, else a simple fallback."""
+    if tabulate is not None:
+        print(tabulate(rows, headers=headers, tablefmt="grid"))
+        return
+
+    widths = [len(h) for h in headers]
+    for row in rows:
+        for i, cell in enumerate(row):
+            widths[i] = max(widths[i], len(str(cell)))
+
+    def make_line(sep: str = "-") -> str:
+        return "+" + "+".join(sep * (w + 2) for w in widths) + "+"
+
+    def make_row(values: list) -> str:
+        padded = [str(v).ljust(widths[i]) for i, v in enumerate(values)]
+        return "| " + " | ".join(padded) + " |"
+
+    print(make_line("-"))
+    print(make_row(headers))
+    print(make_line("="))
+    for row in rows:
+        print(make_row(row))
+    print(make_line("-"))
 
 
 def add_expense(expenses: list[dict]) -> None:
@@ -52,7 +81,7 @@ def list_expenses(expenses: list[dict]) -> None:
     for e in expenses:
         rows.append([e["date"], e["amount"], e["category"], e["description"]])
 
-    print(tabulate(rows, headers=["Date", "Amount", "Category", "Description"], tablefmt="grid"))
+    print_table(rows, headers=["Date", "Amount", "Category", "Description"])
 
 
 def show_total(expenses: list[dict]) -> None:
@@ -82,4 +111,4 @@ def show_category_summary(expenses: list[dict]) -> None:
     for cat, amt in summary.items():
         rows.append([cat, f"₹{amt:.2f}"])
 
-    print(tabulate(rows, headers=["Category", "Total"], tablefmt="grid"))
+    print_table(rows, headers=["Category", "Total"])
