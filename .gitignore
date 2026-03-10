@@ -7,7 +7,7 @@ __pycache__/
 *.pyc
 
 # Local data files
-data/expenses.json
+data/
 
 # Mac system files
 .DS_Store
